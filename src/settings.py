@@ -96,13 +96,24 @@ WSGI_APPLICATION = 'src.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': env('DB_NAME'),
+        'USER': env('DB_USER'),
+        'PASSWORD': env('DB_PASSWORD'),
+        'HOST': env('DB_HOST'),
+        'PORT': env('DB_PORT'),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -163,52 +174,39 @@ os.makedirs(LOG_DIR, exist_ok=True)
 LOG_FILE_PATH = env('LOG_FILE_PATH')
 LOG_FILE_NAME = os.path.join(BASE_DIR, f'logs/{LOG_FILE_PATH}')
 
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,  # Keep Django's default loggers
-    'formatters': {
-        'verbose': {
-            'format': '[{levelname}] {asctime} {module} - {message}',
-            'style': '{',
-        },
-        'simple': {
-            'format': '[{levelname}] {message}',
-            'style': '{',
-        },
-    },
-    'filters': {
-        'exclude_debug_files': {
-            '()': 'django.utils.log.CallbackFilter',
-            'callback': lambda record: not record.getMessage().startswith("File "),
-        },
-    },
-    'handlers': {
-        'file': {
-            'level': 'DEBUG',
-            'class': 'logging.FileHandler',
-            'filename': LOG_FILE_NAME,
-            'formatter': 'verbose',
-            'filters': ['exclude_debug_files'],  # Apply filter to remove file debug logs
-        },
-        'console': {
-            'level': 'DEBUG',
-            'class': 'logging.StreamHandler',
-            'formatter': 'simple',
-            'filters': ['exclude_debug_files'],  # Apply filter here too
-        },
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['file', 'console'],
-            'level': 'DEBUG',
-            'propagate': True,
-        },
-        'src_logger': {
-            'handlers': ['file', 'console'],
-            'level': 'DEBUG',
-            'propagate': False,
-        },
-    },
+LOGGING = {  
+    'version': 1,  
+    'disable_existing_loggers': False,  
+    'formatters': {  
+        'verbose': {  
+            'format': '{levelname} {asctime} {module} {message}',  
+            'style': '{',  
+        },  
+        'simple': {  
+            'format': '{levelname} {message}',  
+            'style': '{',  
+        },  
+    },  
+    'handlers': {  
+        'console': {  
+            'level': 'DEBUG',  
+            'class': 'logging.StreamHandler',  
+            'formatter': 'simple',  
+        },  
+        'file': {  
+            'level': 'DEBUG',  
+            'class': 'logging.FileHandler',  
+            'filename': LOG_FILE_NAME,  
+            'formatter': 'verbose',  
+        },  
+    },  
+    'loggers': {   
+        'src_logger': {  
+            'handlers': ['file', 'console'],  
+            'level': 'INFO',  
+            'propagate': False,  
+        },  
+    },  
 }
 
 
