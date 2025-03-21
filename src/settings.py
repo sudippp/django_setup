@@ -171,8 +171,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 ########################
 LOG_DIR = os.path.join(BASE_DIR, 'logs')
 os.makedirs(LOG_DIR, exist_ok=True)
-LOG_FILE_PATH = env('LOG_FILE_PATH')
-LOG_FILE_NAME = os.path.join(BASE_DIR, f'logs/{LOG_FILE_PATH}')
+
 
 LOGGING = {  
     'version': 1,  
@@ -196,7 +195,7 @@ LOGGING = {
         'file': {  
             'level': 'DEBUG',  
             'class': 'logging.FileHandler',  
-            'filename': LOG_FILE_NAME,  
+            'filename': 'logs/src.log',  
             'formatter': 'verbose',  
         },  
     },  
